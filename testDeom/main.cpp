@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cmath>
 #include <set>
+#include <string>
 using namespace std;
 /*class Median {
 public:
@@ -75,42 +76,36 @@ void Permutation(int A[], int m, int n)
         }
     }
  }
-typedef multiset<int,greater<int> > inSet;
-typedef multiset<int,greater<int> >::iterator setIterator;
+bool comp(string &str1,string &str2){
+    string s1 = str1 + str2;
+    string s2 = str2 + str1;
+    return s1 < s2;
+
+}
 class Solution {
 public:
-
-    vector<int> GetLeastNumbers_Solution(vector<int> input, int k) {
-        vector<int> result;
-        if(input.empty() || input.size()<k)
+    string PrintMinNumber(vector<int> numbers) {
+        string result;
+        if(numbers.empty())
             return result;
-        inSet numberSet;
-        vector<int>::const_iterator iter = input.cbegin();
-        for(;iter != input.cend();++iter){
-            if(numberSet.size() <k)
-                numberSet.insert(*iter);
-            else{
-                setIterator setIter = numberSet.begin();
-                if(*iter < *setIter){
-                    numberSet.erase(setIter);
-                    numberSet.insert(*iter);
-                }
-            }
+        vector<string> strs;
+        for(vector<int> ::const_iterator iter = numbers.cbegin();iter != numbers.end();++iter){
+            strs.push_back(to_string(*iter));
         }
-        //从小到大输出
-        setIterator setIter = numberSet.begin();
-        while(setIter != numberSet.end())
-            result.push_back(*setIter++);
+        sort(strs.begin(),strs.end(),[](string &str1,string &str2){return (str1+str2)<(str2+str1);});
+        for(vector<string>::const_iterator iter = strs.cbegin();iter != strs.end();++iter){
+            result += *iter;
+        }
         return result;
     }
+
 };
 int main()
 {
 
-   Solution s;
-   vector<int> v ={4,5,1,6,2,7,3,8};
-   vector<int> result = s.GetLeastNumbers_Solution(v,4);
-    for(int i=0;i<4;i++)
-        cout<<result[i]<<" ";
+    Solution s;
+    vector<int> v ={3,32,321};
+    string result = s.PrintMinNumber(v);
+    cout << result;
     return 0;
 }
