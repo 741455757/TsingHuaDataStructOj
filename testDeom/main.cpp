@@ -84,28 +84,61 @@ bool comp(string &str1,string &str2){
 }
 class Solution {
 public:
-    string PrintMinNumber(vector<int> numbers) {
-        string result;
-        if(numbers.empty())
-            return result;
-        vector<string> strs;
-        for(vector<int> ::const_iterator iter = numbers.cbegin();iter != numbers.end();++iter){
-            strs.push_back(to_string(*iter));
-        }
-        sort(strs.begin(),strs.end(),[](string &str1,string &str2){return (str1+str2)<(str2+str1);});
-        for(vector<string>::const_iterator iter = strs.cbegin();iter != strs.end();++iter){
-            result += *iter;
-        }
-        return result;
+    int InversePairs(vector<int> data) {
+        if(data.empty())
+            return 0;
+        return mergeSort(data,0,data.size()-1);
     }
+    //使用归并排序来求逆序对
+    int mergeSort(vector<int> &data,int start,int end){
+        if(start == end)
+            return 0;
+        int mid = (end+start)/2;
+        int left = mergeSort(data,start,mid);//前半段的逆序数
+        int right = mergeSort(data,mid+1,end);//后半段的逆序数
 
+        //合并
+        int n1 = mid - start + 1;//前半段元素个数
+        int n2 = end - mid;//后半段元素个数
+        int *leftBuf = new int[n1];
+        int *rightBuf = new int[n2];
+        for(int i=0;i<n1;++i){//复制前半段
+            leftBuf[i] = data[start+i];
+        }
+        for(int i=0;i<n2;++i){//复制后半段
+            rightBuf[i] = data[mid+1+i];
+        }
+        //i 指向前半段最后一位 j指向后半段最后一位
+        int i = n1-1;
+        int j = n2-1;
+        int count = 0;
+        int index = end;
+        while(i>=0 && j>=0){
+            if(leftBuf[i] > rightBuf[j]){//由小至大排列 从后向前填充
+                data[index--] = leftBuf[i--];
+                count += j+1;//更新逆序对个数
+             }
+            else{
+                data[index--] = rightBuf[j--];
+            }
+
+         }
+        //将两段中比较完后剩余段元素（如果有）填回
+        for(;i>=0;--i)
+            data[index--] = leftBuf[i];
+        for(;j>=0;--j)
+            data[index--] = rightBuf[j];
+        delete [] leftBuf;
+        delete [] rightBuf;
+        return left + right + count;
+    }
 };
 int main()
 {
 
     Solution s;
-    vector<int> v ={3,32,321};
-    string result = s.PrintMinNumber(v);
+    vector<int> v ={1,2,3,4,7,6,5};
+    int result = s.InversePairs(v);
     cout << result;
     return 0;
 }
