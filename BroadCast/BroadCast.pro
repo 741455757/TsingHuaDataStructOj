@@ -9,3 +9,6 @@ SOURCES += \
 include(deployment.pri)
 qtcAddDeployment()
 
+DISTFILES += \
+    ÌâÄ¿.txt
+

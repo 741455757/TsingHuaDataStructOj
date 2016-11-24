@@ -83,8 +83,7 @@ void MergeSort(int *array,int l,int r)
     int mid;
     if(l == r)
         return;
-   // mid = l+((r-1)>>1);
-    mid = (l+r)>>1;
+    mid = l+((r-l)>>1);
     MergeSort(array,l,mid);
     MergeSort(array,mid+1,r);
     Merge(array,l,mid,r);
